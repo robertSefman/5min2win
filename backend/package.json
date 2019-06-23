@@ -1,0 +1,23 @@
+{
+  "name": "5min2win-backend",
+  "version": "0.1.0",
+  "description": "The backend for 5min2win",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "deploy": "npm run build && sls deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertSefman/5min2win.git"
+  },
+  "author": "Robert Šefman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robertSefman/5min2win/issues"
+  },
+  "homepage": "https://github.com/robertSefman/5min2win#readme",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.26"
+  }
+}

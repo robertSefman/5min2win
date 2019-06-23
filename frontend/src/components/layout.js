@@ -8,12 +8,25 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { StaticQuery, graphql } from "gatsby"
-import { ThemeProvider } from "styled-components"
+import styled, { ThemeProvider } from "styled-components"
+import ButterToast, { POS_TOP, POS_RIGHT } from 'butter-toast'
+
+import "./layout.css"
 
 import theme from "./theme"
-
 import Header from "./header"
-import "./layout.css"
+import { CentralColumn } from "./styles"
+
+const Footer = styled.footer`
+  font-size: 0.5em;
+`
+
+const Body = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 70px 1fr 30px;
+  min-height: 100vh;
+`
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -28,24 +41,20 @@ const Layout = ({ children }) => (
     `}
     render={data => (
       <ThemeProvider theme={theme}>
-        <>
+        <Body>
           <Header siteTitle={data.site.siteMetadata.title} />
-          <div
-            style={{
-              margin: `0 auto`,
-              maxWidth: 960,
-              padding: `0px 1.0875rem 1.45rem`,
-              paddingTop: 0,
-            }}
-          >
+
             <main>{children}</main>
-            <footer>
-              © {new Date().getFullYear()}, Built with
-              {` `}
-              <a href="https://www.gatsbyjs.org">Gatsby</a>
-            </footer>
-          </div>
-        </>
+
+            <Footer>
+              <CentralColumn>
+                © {new Date().getFullYear()}, Built with love
+                {` `}
+                <a href="https://5min2win.com">5min2win</a>
+              </CentralColumn>
+            </Footer>
+            <ButterToast position={{vertical : POS_TOP, horizontal : POS_RIGHT}} />
+        </Body>
       </ThemeProvider>
     )}
   />

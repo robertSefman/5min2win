@@ -1,0 +1,15 @@
+service: 5min2win
+
+provider:
+    name: aws
+    runtime: nodejs8.10
+    stage: dev
+functions:
+    graphql:
+        handler: dist/graphql.handler
+        events:
+            - http:
+                  path: graphql
+                  method: GET
+                  cors: true
+
