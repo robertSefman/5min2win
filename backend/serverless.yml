@@ -4,6 +4,16 @@ provider:
     name: aws
     runtime: nodejs8.10
     stage: dev
+    environment:
+        DYNAMODB_TABLE: ${self:service}-db-${self:provider.stage}
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:PutItem
+            - dynamodb:Scan
+          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
     graphql:
@@ -14,3 +24,22 @@ functions:
                   method: GET
                   cors: true
 
+resources:
+    Resources:
+        The5min2winWidgetsTable:
+            Type: "AWS::DynamoDB::Table"
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: widgetId
+                      AttributeType: S
+                    - AttributeName: thumbsUp
+                      AttributeType: N
+                    - AttributeName: thumbsDown
+                      AttributeType: N
+                KeySchema:
+                    - AttributeName: widgetId
+                      KeyType: HASH
+                ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+                TableName: ${self:provider.environment.DYNAMODB_TABLE}
