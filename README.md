@@ -22,9 +22,13 @@ http://localhost:8000/
 
 ## Backend:
 https://swizec.com/blog/typescript-serverless-lambda/swizec/9103
-- npm install -g typescript ts-node
-- npm add @types/aws-lambda
-- npm install -g serverless
+- yarn global add typescript ts-node  // TypeScript compiler
+- yarn add @types/aws-lambda
+- yarn i -D @types/node (https://scotch.io/@nwayve/how-to-build-a-lambda-function-in-typescript)
+- yarn global add serverless
+    Framework for managing serverless functions (Lambdas, DynamoDB, ... )
+    works for Azur, AWS, enables all configuration in serverless.yml file, you don't need to go to AWS
+    for configuration. works on all environments (AWS, Azur, ...) automaticly
 
 Setting AWS Lambda credentials for serverless
 https://serverless.com/framework/docs/providers/aws/guide/credentials/
