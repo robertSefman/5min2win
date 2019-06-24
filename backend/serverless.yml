@@ -32,10 +32,6 @@ resources:
                 AttributeDefinitions:
                     - AttributeName: widgetId
                       AttributeType: S
-                    - AttributeName: thumbsUp
-                      AttributeType: N
-                    - AttributeName: thumbsDown
-                      AttributeType: N
                 KeySchema:
                     - AttributeName: widgetId
                       KeyType: HASH

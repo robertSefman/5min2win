@@ -1,9 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = async (event) => {
-    return {
-        statusCode: 200,
-        body: 'Hello world',
-    };
+const apollo_server_lambda_1 = require("apollo-server-lambda");
+const typeDefs = apollo_server_lambda_1.gql `
+    type Query {
+        hello: String
+    }
+`;
+const resolvers = {
+    Query: () => 'Hello world'
 };
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ3JhcGhxbC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uL3NyYy9ncmFwaHFsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBRWEsUUFBQSxPQUFPLEdBQUcsS0FBSyxFQUFFLEtBQXNCLEVBQWlCLEVBQUU7SUFDbkUsT0FBTTtRQUNGLFVBQVUsRUFBQyxHQUFHO1FBQ2QsSUFBSSxFQUFDLGFBQWE7S0FDckIsQ0FBQTtBQUNMLENBQUMsQ0FBQSJ9
+const server = new apollo_server_lambda_1.ApolloServer({
+    typeDefs,
+    resolvers
+});
+exports.handler = server.createHandler();
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ3JhcGhxbC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uL3NyYy9ncmFwaHFsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsK0RBQXdEO0FBRXhELE1BQU0sUUFBUSxHQUFHLDBCQUFHLENBQUE7Ozs7Q0FJbkIsQ0FBQTtBQUVELE1BQU0sU0FBUyxHQUFHO0lBQ2QsS0FBSyxFQUFFLEdBQUcsRUFBRSxDQUFDLGFBQWE7Q0FDN0IsQ0FBQTtBQUVELE1BQU0sTUFBTSxHQUFHLElBQUksbUNBQVksQ0FBQztJQUM1QixRQUFRO0lBQ1IsU0FBUztDQUNaLENBQUMsQ0FBQTtBQUVXLFFBQUEsT0FBTyxHQUFHLE1BQU0sQ0FBQyxhQUFhLEVBQUUsQ0FBQSJ9

@@ -24,7 +24,8 @@ http://localhost:8000/
 https://swizec.com/blog/typescript-serverless-lambda/swizec/9103
 - yarn global add typescript ts-node  // TypeScript compiler
 - yarn add @types/aws-lambda
-- yarn i -D @types/node (https://scotch.io/@nwayve/how-to-build-a-lambda-function-in-typescript)
+- yarn add @types/graphql
+- ??-NO! yarn i -D @types/node (https://scotch.io/@nwayve/how-to-build-a-lambda-function-in-typescript)
 - yarn global add serverless
     Framework for managing serverless functions (Lambdas, DynamoDB, ... )
     works for Azur, AWS, enables all configuration in serverless.yml file, you don't need to go to AWS
@@ -34,6 +35,9 @@ Setting AWS Lambda credentials for serverless
 https://serverless.com/framework/docs/providers/aws/guide/credentials/
 serverless config credentials --provider aws --key XXXXXX --secret XXXXXXXX
 
+Serverles.yaml: https://github.com/Swizec/shared-grocery-list/blob/master/server/serverless.yml
+
+- yarn add apollo-server-lambda graphql
 
 ## Usefull:
 https://layoutit.com/
