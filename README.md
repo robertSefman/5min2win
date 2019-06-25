@@ -39,6 +39,28 @@ Serverles.yaml: https://github.com/Swizec/shared-grocery-list/blob/master/server
 
 - yarn add apollo-server-lambda graphql
 
+graphql uses POST for everything, so you must define:
+            - http:
+                  path: graphql
+                  method: POST
+                  cors: true
+    in serverless.yml
+
+- yarn add aws-sdk
+
+Dynamo DB save: https://github.com/Swizec/shared-grocery-list/blob/master/server/dynamodb.js
+
+- yarn add uuid https://www.npmjs.com/package/uuid
+- yarn add @types/uuid
+
+Graphql schema validator: http://toolbox.sangria-graphql.org/format
+
+    https://www.crowdcast.io/e/d7h1f3dl/5 @44:00 - local Apollo server, @58:00
+
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html
+
+AWS Logs: CloudWatch
+
 ## Usefull:
 https://layoutit.com/
 https://cssgrid-generator.netlify.com/
