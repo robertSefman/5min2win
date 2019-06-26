@@ -7,34 +7,55 @@ const apollo_server_lambda_1 = require("apollo-server-lambda");
 const v4_1 = __importDefault(require("uuid/v4"));
 const dynamoDB_1 = require("./dynamoDB");
 const typeDefs = apollo_server_lambda_1.gql `
-    type Query {
-        hello: String
-    }
-
-    type Widget{
+    type Widget {
         name: String!
         widgetId: String!
         thumbsUp: Int
         thumbsDown: Int
     }
-
-    type Mutation{
-        saveWidget(name: String!): Widget
+    type Query {
+        widget(widgetId: String!): Widget
+        allWidget: [Widget]
+    }
+    type Mutation {
+        saveWidget(name: String!, widgetId: String): Widget
+        widgetVote(
+            widgetId: String!
+            thumbsUp: Boolean
+            thumbsDown: Boolean
+        ): Widget
     }
 `;
 const resolvers = {
     Query: {
-        hello: () => 'Hello world'
+        widget: async (_, { widgetId }) => {
+            const result = await dynamoDB_1.getItem({ Key: { widgetId } });
+            if (!result.Item) {
+                return {};
+            }
+            const item = Object.assign({}, result.Item, { name: result.Item.widgetName });
+            return item;
+        },
+        allWidget: async () => {
+            const result = await dynamoDB_1.scanItems({});
+            if (!result.Items) {
+                return [];
+            }
+            return result.Items.map(widget => (Object.assign({}, widget, { name: widget.widgetName })));
+        }
     },
     Mutation: {
-        saveWidget: async (_, { name }) => {
-            const widgetId = v4_1.default();
-            const result = dynamoDB_1.updateItem({
+        saveWidget: async (_, { name, widgetId }) => {
+            if (!widgetId) {
+                widgetId = v4_1.default();
+            }
+            const result = await dynamoDB_1.updateItem({
                 Key: { widgetId },
-                UpdateExpression: "SET widgetId = :widgetId, widgetName = :name",
+                UpdateExpression: "SET widgetName = :name, thumbsUp = :thumbsUp, thumbsDown = :thumbsDown",
                 ExpressionAttributeValues: {
-                    ':widgetId': widgetId,
-                    ':name': name
+                    ":name": name,
+                    ":thumbsUp": 0,
+                    ":thumbsDown": 0,
                 }
             });
             console.log(result);
@@ -52,4 +73,4 @@ const server = new apollo_server_lambda_1.ApolloServer({
     resolvers
 });
 exports.handler = server.createHandler();
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ3JhcGhxbC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uL3NyYy9ncmFwaHFsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O0FBQUEsK0RBQXdEO0FBQ3hELGlEQUE0QjtBQUM1Qix5Q0FBd0M7QUFHeEMsTUFBTSxRQUFRLEdBQUcsMEJBQUcsQ0FBQTs7Ozs7Ozs7Ozs7Ozs7O0NBZW5CLENBQUE7QUFFRCxNQUFNLFNBQVMsR0FBRztJQUNkLEtBQUssRUFBRTtRQUNILEtBQUssRUFBRSxHQUFHLEVBQUUsQ0FBQyxhQUFhO0tBQzdCO0lBRUQsUUFBUSxFQUFFO1FBQ04sVUFBVSxFQUFFLEtBQUssRUFBRyxDQUFNLEVBQUUsRUFBRSxJQUFJLEVBQWtCLEVBQUcsRUFBRTtZQUNyRCxNQUFNLFFBQVEsR0FBRyxZQUFNLEVBQUUsQ0FBQTtZQUV6QixNQUFNLE1BQU0sR0FBRyxxQkFBVSxDQUFDO2dCQUN0QixHQUFHLEVBQUUsRUFBRSxRQUFRLEVBQUU7Z0JBQ2pCLGdCQUFnQixFQUNaLDhDQUE4QztnQkFDbEQseUJBQXlCLEVBQUU7b0JBQ3ZCLFdBQVcsRUFBRSxRQUFRO29CQUNyQixPQUFPLEVBQUUsSUFBSTtpQkFDaEI7YUFDSixDQUFDLENBQUE7WUFFRixPQUFPLENBQUMsR0FBRyxDQUFFLE1BQU0sQ0FBRSxDQUFBO1lBRXJCLE9BQU87Z0JBQ0gsSUFBSTtnQkFDSixRQUFRO2dCQUNSLFFBQVEsRUFBRSxDQUFDO2dCQUNYLFVBQVUsRUFBRSxDQUFDO2FBRWhCLENBQUE7UUFDTCxDQUFDO0tBQ0o7Q0FDSixDQUFBO0FBRUQsTUFBTSxNQUFNLEdBQUcsSUFBSSxtQ0FBWSxDQUFDO0lBQzVCLFFBQVE7SUFDUixTQUFTO0NBQ1osQ0FBQyxDQUFBO0FBRVcsUUFBQSxPQUFPLEdBQUcsTUFBTSxDQUFDLGFBQWEsRUFBRSxDQUFBIn0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ3JhcGhxbC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uL3NyYy9ncmFwaHFsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O0FBQUEsK0RBQXdEO0FBQ3hELGlEQUE0QjtBQUM1Qix5Q0FBNEQ7QUFHNUQsTUFBTSxRQUFRLEdBQUcsMEJBQUcsQ0FBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7OztDQW1CbkIsQ0FBQTtBQUVELE1BQU0sU0FBUyxHQUFHO0lBQ2QsS0FBSyxFQUFFO1FBQ0gsTUFBTSxFQUFFLEtBQUssRUFBRyxDQUFNLEVBQUUsRUFBRSxRQUFRLEVBQXNCLEVBQUUsRUFBRTtZQUN4RCxNQUFNLE1BQU0sR0FBRyxNQUFNLGtCQUFPLENBQ3ZCLEVBQUUsR0FBRyxFQUFFLEVBQUUsUUFBUSxFQUFFLEVBQUMsQ0FDeEIsQ0FBQTtZQUVELElBQUksQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO2dCQUNkLE9BQU8sRUFBRSxDQUFBO2FBQ1o7WUFFRCxNQUFNLElBQUkscUJBQ0gsTUFBTSxDQUFDLElBQUksSUFDZCxJQUFJLEVBQUUsTUFBTSxDQUFDLElBQUksQ0FBQyxVQUFVLEdBQy9CLENBQUE7WUFFRCxPQUFPLElBQUksQ0FBQTtRQUNmLENBQUM7UUFDRCxTQUFTLEVBQUUsS0FBSyxJQUFJLEVBQUU7WUFDbEIsTUFBTSxNQUFNLEdBQUcsTUFBTSxvQkFBUyxDQUFDLEVBQUUsQ0FBQyxDQUFBO1lBQ2xDLElBQUksQ0FBQyxNQUFNLENBQUMsS0FBSyxFQUFFO2dCQUNmLE9BQU8sRUFBRSxDQUFBO2FBQ1o7WUFDRCxPQUFPLE1BQU0sQ0FBQyxLQUFLLENBQUMsR0FBRyxDQUFDLE1BQU0sQ0FBQSxFQUFFLENBQUMsbUJBQUssTUFBTSxJQUFFLElBQUksRUFBRSxNQUFNLENBQUMsVUFBVSxJQUFFLENBQUMsQ0FBQTtRQUM1RSxDQUFDO0tBQ0o7SUFFRCxRQUFRLEVBQUU7UUFDTixVQUFVLEVBQUUsS0FBSyxFQUNaLENBQU0sRUFDUCxFQUFFLElBQUksRUFBRSxRQUFRLEVBQXVDLEVBQ3pELEVBQUU7WUFDQSxJQUFJLENBQUMsUUFBUSxFQUFFO2dCQUNYLFFBQVEsR0FBRyxZQUFNLEVBQUUsQ0FBQTthQUN0QjtZQUVELE1BQU0sTUFBTSxHQUFHLE1BQU0scUJBQVUsQ0FBQztnQkFDNUIsR0FBRyxFQUFFLEVBQUUsUUFBUSxFQUFFO2dCQUNqQixnQkFBZ0IsRUFDWix3RUFBd0U7Z0JBQzVFLHlCQUF5QixFQUFFO29CQUN2QixPQUFPLEVBQUUsSUFBSTtvQkFDYixXQUFXLEVBQUUsQ0FBQztvQkFDZCxhQUFhLEVBQUUsQ0FBQztpQkFDbkI7YUFDSixDQUFDLENBQUE7WUFFRixPQUFPLENBQUMsR0FBRyxDQUFFLE1BQU0sQ0FBRSxDQUFBO1lBRXJCLE9BQU87Z0JBQ0gsSUFBSTtnQkFDSixRQUFRO2dCQUNSLFFBQVEsRUFBRSxDQUFDO2dCQUNYLFVBQVUsRUFBRSxDQUFDO2FBRWhCLENBQUE7UUFDTCxDQUFDO0tBQ0o7Q0FDSixDQUFBO0FBRUQsTUFBTSxNQUFNLEdBQUcsSUFBSSxtQ0FBWSxDQUFDO0lBQzVCLFFBQVE7SUFDUixTQUFTO0NBQ1osQ0FBQyxDQUFBO0FBRVcsUUFBQSxPQUFPLEdBQUcsTUFBTSxDQUFDLGFBQWEsRUFBRSxDQUFBIn0=
