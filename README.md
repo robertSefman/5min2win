@@ -49,6 +49,7 @@ graphql uses POST for everything, so you must define:
 - yarn add aws-sdk
 
 Dynamo DB save: https://github.com/Swizec/shared-grocery-list/blob/master/server/dynamodb.js
+    DynamoDB without Apollo: https://github.com/Swizec/shared-grocery-list
 
 - yarn add uuid https://www.npmjs.com/package/uuid
 - yarn add @types/uuid
@@ -60,6 +61,10 @@ Graphql schema validator: http://toolbox.sangria-graphql.org/format
 https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html
 
 AWS Logs: CloudWatch
+
+widgetId?: string // optional widgetId
+widgetId: string! // mandatory widgetId
+
 
 ## Usefull:
 https://layoutit.com/
