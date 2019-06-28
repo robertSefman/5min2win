@@ -66,6 +66,12 @@ widgetId?: string // optional widgetId
 widgetId: string! // mandatory widgetId
 
 
+backend:
+    yarn deploy
+frontend:
+    gatsby clean
+    gatsby deploy
+
 ## Usefull:
 https://layoutit.com/
 https://cssgrid-generator.netlify.com/

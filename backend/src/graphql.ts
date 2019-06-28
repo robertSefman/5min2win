@@ -16,11 +16,6 @@ const typeDefs = gql`
     }
     type Mutation {
         saveWidget(name: String!, widgetId: String): Widget
-        widgetVote(
-            widgetId: String!
-            thumbsUp: Boolean
-            thumbsDown: Boolean
-        ): Widget
     }
 `
 
@@ -89,4 +84,9 @@ const server = new ApolloServer({
     resolvers
 })
 
-export const handler = server.createHandler()
+export const handler = server.createHandler({
+    cors:{
+        origin: '*',
+        credentials: true,
+    }
+})
