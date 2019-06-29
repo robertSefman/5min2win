@@ -11,13 +11,7 @@ import { Heading, Flex } from "./styles"
 
 import { copyToClipboard, getCSS } from "../utils"
 
-const SAVE_WIDGET_QUERY = gql`
-  mutation saveWidget($name: String!, $widgetId: String){
-    saveWidget(name: $name, widgetId: $widgetId){
-      widgetId
-    }
-  }
-`
+import { SAVE_WIDGET_QUERY } from '../queries'
 
 const Input = styled.input`
   border: 0;
@@ -30,7 +24,7 @@ const Input = styled.input`
   }
 `
 
-const RoundButton = styled.button`
+const RoundButton = styled.a`
   border-radius: 100%;
   font-size: ${palette("headings", 0)};
   line-height: ${palette("headings", 0)};

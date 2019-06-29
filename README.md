@@ -67,10 +67,16 @@ widgetId: string! // mandatory widgetId
 
 
 backend:
+    https://a0veo2tny8.execute-api.us-east-1.amazonaws.com/dev/graphql
+    https://ipuh3tdwwg.execute-api.us-east-1.amazonaws.com/dev/graphql
+
     yarn deploy
+
+
 frontend:
     gatsby clean
     gatsby deploy
+    rm -rf .cache/    ...brisanje cache-a od gatsbyja
 
 ## Usefull:
 https://layoutit.com/

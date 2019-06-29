@@ -7,8 +7,8 @@ const typeDefs = gql`
     type Widget {
         name: String!
         widgetId: String!
-        thumbsUp: Int
-        thumbsDown: Int
+        thumbsup: Int
+        thumbsdown: Int
     }
     type Query {
         widget(widgetId: String!): Widget
@@ -16,6 +16,7 @@ const typeDefs = gql`
     }
     type Mutation {
         saveWidget(name: String!, widgetId: String): Widget
+        widgetVote( widgetId: String!, thumbsup: Boolean, thumbsdown: Boolean ): Widget
     }
 `
 
@@ -58,11 +59,11 @@ const resolvers = {
             const result = await updateItem({
                 Key: { widgetId },
                 UpdateExpression: 
-                    "SET widgetName = :name, thumbsUp = :thumbsUp, thumbsDown = :thumbsDown",
+                    "SET widgetName = :name, thumbsup = :thumbsup, thumbsdown = :thumbsdown",
                 ExpressionAttributeValues: {
                     ":name": name,
-                    ":thumbsUp": 0,
-                    ":thumbsDown": 0,
+                    ":thumbsup": 0,
+                    ":thumbsdown": 0,
                 }
             })
 
@@ -71,9 +72,35 @@ const resolvers = {
             return {
                 name,
                 widgetId,
-                thumbsUp: 0,
-                thumbsDown: 0,
+                thumbsup: 0,
+                thumbsdown: 0,
 
+            }
+        },
+        widgetVote: async(
+            _: any,
+            { 
+                widgetId,
+                thumbsup = false,
+                thumbsdown = false
+            }: { widgetId: string, thumbsup?: boolean, thumbsdown?: boolean } 
+        ) => {
+                
+            const { Attributes } = await updateItem({
+                Key: { widgetId },
+                UpdateExpression: 
+                    "SET thumbsup = thumbsup + :thumbsup, thumbsdown = thumbsdown + :thumbsdown",
+                ExpressionAttributeValues: {
+                    ":thumbsup": thumbsup ? 1 : 0,
+                    ":thumbsdown": thumbsdown ? 1 : 0
+                },
+                ReturnValues: 'ALL_NEW'
+
+            })
+
+            return {
+                ...Attributes,
+                name: Attributes && Attributes.widgetName
             }
         }
     }

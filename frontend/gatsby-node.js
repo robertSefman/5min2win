@@ -31,12 +31,17 @@ exports.onCreateWebpackConfig = ({ actions }) => {
         }
       `)
 
+      if( !result ){
+        resolve()
+      }
+
       result.data.widgetsapi.allWidget.forEach( ({ widgetId }) => {
         const componentPath = path.resolve( './src/pages/vote.js' )
         createPage({
           path: `/${widgetId}/thumbsup`,
           component: componentPath,
           context: {
+            widgetId,
             voteType: 'thumbsup',
           }
         }),
@@ -44,6 +49,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
           path: `/${widgetId}/thumbsdown`,
           component: componentPath,
           context: {
+            widgetId,
             voteType: 'thumbsdown',
           }
         })
