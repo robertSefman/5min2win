@@ -58,7 +58,7 @@ const Question = styled(Heading)`
   text-align: center;
 `
 
-const Widget = React.forwardRef(({ editable, value, update }, ref) => (
+const Widget = React.forwardRef(({ widgetId, editable, value, update }, ref) => (
   <WidgetLayout ref={ref}>
     <Question h2>
       Did this{" "}
@@ -74,8 +74,8 @@ const Widget = React.forwardRef(({ editable, value, update }, ref) => (
       spark joy?
     </Question>
     <Flex row>
-      <RoundButton>👎</RoundButton>
-      <RoundButton>👍</RoundButton>
+      <RoundButton href={`/${widgetId}/thumbsdown`}>👎</RoundButton>
+      <RoundButton href={`/${widgetId}/thumbsup`}>👍</RoundButton>
     </Flex>
   </WidgetLayout>
 ))
@@ -85,9 +85,17 @@ const WidgetBuilder = () => {
   const apolloClient = useApolloClient()
 
   async function exportWidget() {
+
+    const {data} = await apolloClient.mutate({
+      mutation: SAVE_WIDGET_QUERY,
+      variables: {
+        name: typeOfJoy
+      }
+    })
+
     const widgetRef = React.createRef()
 
-    const widget = <Widget value={typeOfJoy} ref={widgetRef} />
+    const widget = <Widget value={typeOfJoy} widgetId={data.saveWidget.widgetId} ref={widgetRef} />
     const el = document.createElement("div")
     ReactDOM.render(widget, el)
 
@@ -95,15 +103,6 @@ const WidgetBuilder = () => {
     const html = `<style>${styles}</style>${el.innerHTML}`
 
     copyToClipboard(html)
-
-    const result = await apolloClient.mutate({
-      mutation: SAVE_WIDGET_QUERY,
-      variables: {
-        name: typeOfJoy
-      }
-    })
-
-    console.log( result)
 
     ButterToast.raise({
       content: (

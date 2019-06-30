@@ -68,12 +68,13 @@ widgetId: string! // mandatory widgetId
 
 backend:
     https://a0veo2tny8.execute-api.us-east-1.amazonaws.com/dev/graphql
-    https://ipuh3tdwwg.execute-api.us-east-1.amazonaws.com/dev/graphql
-
+    serverless deploy --force
     yarn deploy
 
 
 frontend:
+    yarn build
+    yarn start
     gatsby clean
     gatsby deploy
     rm -rf .cache/    ...brisanje cache-a od gatsbyja
@@ -81,6 +82,7 @@ frontend:
 ## Usefull:
 https://layoutit.com/
 https://cssgrid-generator.netlify.com/
+https://www.react-spinners.com/
 
 ## Part ONE:
 Sending e-mails
