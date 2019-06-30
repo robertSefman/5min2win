@@ -4,14 +4,14 @@ import styled from "styled-components"
 import { Button } from "rebass"
 import { palette } from "styled-tools"
 import ButterToast, { Cinnamon } from "butter-toast"
-import gql from 'graphql-tag'
-import { useApolloClient } from 'react-apollo-hooks'
+import gql from "graphql-tag"
+import { useApolloClient } from "react-apollo-hooks"
 
 import { Heading, Flex } from "./styles"
 
 import { copyToClipboard, getCSS } from "../utils"
 
-import { SAVE_WIDGET_QUERY } from '../queries'
+import { SAVE_WIDGET_QUERY } from "../queries"
 
 const Input = styled.input`
   border: 0;
@@ -58,44 +58,58 @@ const Question = styled(Heading)`
   text-align: center;
 `
 
-const Widget = React.forwardRef(({ widgetId, editable, value, update }, ref) => (
-  <WidgetLayout ref={ref}>
-    <Question h2>
-      Did this{" "}
-      {editable ? (
-        <Input
-          type="text"
-          value={value}
-          onChange={event => update(event.target.value)}
-        />
-      ) : (
-        value
-      )}{" "}
-      spark joy?
-    </Question>
-    <Flex row>
-      <RoundButton href={`/${widgetId}/thumbsdown`}>👎</RoundButton>
-      <RoundButton href={`/${widgetId}/thumbsup`}>👍</RoundButton>
-    </Flex>
-  </WidgetLayout>
-))
+const Widget = React.forwardRef(
+  ({ widgetId, editable, value, update }, ref) => (
+    <WidgetLayout ref={ref}>
+      <Question h2>
+        Did this{" "}
+        {editable ? (
+          <Input
+            type="text"
+            value={value}
+            onChange={event => update(event.target.value)}
+          />
+        ) : (
+          value
+        )}{" "}
+        spark joy?
+      </Question>
+      <Flex row>
+        <RoundButton href={`/${widgetId}/thumbsdown`}>👎</RoundButton>
+        <RoundButton href={`/${widgetId}/thumbsup`}>👍</RoundButton>
+      </Flex>
+    </WidgetLayout>
+  )
+)
 
 const WidgetBuilder = () => {
   const [typeOfJoy, setTypeOfJoy] = useState("")
   const apolloClient = useApolloClient()
 
   async function exportWidget() {
+    const followupQuestions = [
+      { label: "Why?", type: "text" },
+      { label: "Have a burning question?", type: "text" },
+      { label: "Would you recomend this to a friend?", type: "boolean" },
+    ]
 
-    const {data} = await apolloClient.mutate({
+    const { data } = await apolloClient.mutate({
       mutation: SAVE_WIDGET_QUERY,
       variables: {
-        name: typeOfJoy
-      }
+        name: typeOfJoy,
+        followupQuestions: JSON.stringify(followupQuestions),
+      },
     })
 
     const widgetRef = React.createRef()
 
-    const widget = <Widget value={typeOfJoy} widgetId={data.saveWidget.widgetId} ref={widgetRef} />
+    const widget = (
+      <Widget
+        value={typeOfJoy}
+        widgetId={data.saveWidget.widgetId}
+        ref={widgetRef}
+      />
+    )
     const el = document.createElement("div")
     ReactDOM.render(widget, el)
 

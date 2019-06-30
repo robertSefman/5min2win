@@ -6,64 +6,70 @@
 
 // You can delete this file if you're not using it
 
-const path = require( 'path' ) 
+const path = require("path")
 
 exports.onCreateWebpackConfig = ({ actions }) => {
-    actions.setWebpackConfig({
-      node: {
-        fs: "empty",
-      },
-    })
-  }
+  actions.setWebpackConfig({
+    node: {
+      fs: "empty",
+    },
+  })
+}
 
+exports.createPages = ({ graphql, actions }) => {
+  const { createPage } = actions
 
-  exports.createPages = ({ graphql, actions }) => {
-    const { createPage } = actions
-
-    return new Promise( async resolve => {
-      const result = await graphql(`
-        query{
-          widgetsapi{
-            allWidget{
-              widgetId
-            }
+  return new Promise(async resolve => {
+    const result = await graphql(`
+      query {
+        widgetsapi {
+          allWidget {
+            widgetId
+            name
+            followupQuestions
           }
         }
-      `)
-
-      if( !result ){
-        resolve()
       }
+    `)
 
-      result.data.widgetsapi.allWidget.forEach( ({ widgetId, name }) => {
-        const votePath = path.resolve( './src/pages/vote.js' )
-        const widgetPath = path.resolve( './src/pages/widget.js' )
+    if (!result) {
+      resolve()
+    }
+
+    result.data.widgetsapi.allWidget.forEach(
+      ({ widgetId, name, followupQuestions }) => {
+        const votePath = path.resolve("./src/pages/vote.js")
+        const widgetPath = path.resolve("./src/pages/widget.js")
+
         createPage({
           path: `/${widgetId}/thumbsup`,
           component: votePath,
           context: {
             widgetId,
-            voteType: 'thumbsup',
-          }
+            followupQuestions,
+            voteType: "thumbsup",
+          },
         }),
-        createPage({
-          path: `/${widgetId}/thumbsdown`,
-          component: votePath,
-          context: {
-            widgetId,
-            voteType: 'thumbsdown',
-          }
-        }),
-        createPage({
-          path: widgetId,
-          component: widgetPath,
-          context: {
-            widgetId,
-            name,
-          }
-        })
-      })
+          createPage({
+            path: `/${widgetId}/thumbsdown`,
+            component: votePath,
+            context: {
+              widgetId,
+              followupQuestions,
+              voteType: "thumbsdown",
+            },
+          }),
+          createPage({
+            path: widgetId,
+            component: widgetPath,
+            context: {
+              widgetId,
+              name,
+            },
+          })
+      }
+    )
 
-      resolve()
-    })
-  }
+    resolve()
+  })
+}
