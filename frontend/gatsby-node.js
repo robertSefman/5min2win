@@ -41,6 +41,10 @@ exports.createPages = ({ graphql, actions }) => {
         const votePath = path.resolve("./src/pages/vote.js")
         const widgetPath = path.resolve("./src/pages/widget.js")
 
+        followupQuestions = JSON.parse(followupQuestions).sort(
+          (a, b) => a.id - b.id
+        )
+
         createPage({
           path: `/${widgetId}/thumbsup`,
           component: votePath,

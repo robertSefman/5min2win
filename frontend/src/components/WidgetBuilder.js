@@ -88,9 +88,9 @@ const WidgetBuilder = () => {
 
   async function exportWidget() {
     const followupQuestions = [
-      { label: "Why?", type: "text" },
-      { label: "Have a burning question?", type: "text" },
-      { label: "Would you recomend this to a friend?", type: "boolean" },
+      { label: "Why?", id: 1, type: "text" },
+      { label: "Have a burning question?", id: 2, type: "text" },
+      { label: "Would you recomend this to a friend?", id: 3, type: "boolean" },
     ]
 
     const { data } = await apolloClient.mutate({
