@@ -1,17 +1,17 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useApolloClient } from "react-apollo-hooks"
 import { CentralColumn } from "../components/styles"
 import { Form, Field } from "react-final-form"
 import { Button } from "rebass"
 
-import Layout from "../components/layout"
-import Image from "../components/image"
+// import Layout from "../components/layout"
+// import Image from "../components/image"
 import SEO from "../components/seo"
 
-import { WIDGET_VOTE_QUERY } from "../queries"
+import { WIDGET_VOTE_QUERY, SAVE_WIDGET_FEEDBACK_QUERY } from "../queries"
 
-async function saveVote({ widgetId, voteType, ApolloClient }) {
-  const result = await ApolloClient.mutate({
+async function saveVote({ widgetId, voteType, apolloClient }) {
+  const result = await apolloClient.mutate({
     mutation: WIDGET_VOTE_QUERY,
     variables: {
       widgetId: widgetId,
@@ -23,7 +23,7 @@ async function saveVote({ widgetId, voteType, ApolloClient }) {
 
 function renderField({ id, label, type }) {
   return (
-    <div>
+    <div key={id}>
       <label>{label}</label>
       <br />
       <Field
@@ -37,33 +37,51 @@ function renderField({ id, label, type }) {
   )
 }
 
-const onSubmit = async values => {
-  window.alert(JSON.stringify(values, 0, 2))
-}
+// Final submition method
+//
+// const onSubmit = async ({ widgetId, values, apolloClient }) => {
+//   await apolloClient.mutate({
+//     mutation: SAVE_WIDGET_FEEDBACK_QUERY,
+//     variables: {
+//       widgetId,
+//       values: JSON.stringify(values),
+//     },
+//   })
+// }
 
 const VotePage = ({ pageContext }) => {
-  const ApolloClient = useApolloClient()
+  const apolloClient = useApolloClient()
   const { widgetId, voteType, followupQuestions } = pageContext
 
+  const [fieldIndex, setFieldIndex] = useState(0)
+
   useEffect(() => {
-    saveVote({ widgetId, voteType, ApolloClient })
+    saveVote({ widgetId, voteType, apolloClient })
   }, []) // Empty second param tels, it runs at component mount
 
+  function onSubmit(values) {
+    if (fieldIndex >= followupQuestions.length - 1) {
+      console.log(values)
+    } else {
+      setFieldIndex(fieldIndex + 1)
+    }
+  }
+
   return (
-    <Layout>
+    <>
       <SEO title="Thank you" />
       <CentralColumn style={{ paddingTop: "2em" }}>
         <Form
           onSubmit={onSubmit}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
-              {followupQuestions.map(renderField)}
-              <Button type="submit">Give feedback </Button>
+              {renderField(followupQuestions[fieldIndex])}
+              {/* <Button type="submit">Give feedback </Button> */}
             </form>
           )}
         ></Form>
       </CentralColumn>
-    </Layout>
+    </>
   )
 }
 
