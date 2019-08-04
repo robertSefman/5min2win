@@ -13,7 +13,10 @@ const typeDefs = gql`
 
   type Feedback {
     widgetId: String!
-    values: String!
+    voteId: String!
+    voteType: String!
+    answers: String!
+    createdAt: String
   }
 
   type Query {
@@ -32,7 +35,13 @@ const typeDefs = gql`
       thumbsup: Boolean
       thumbsdown: Boolean
     ): Widget
-    saveFeedback(widgetId: String!, values: String!): Feedback
+    saveFeedback(
+      widgetId: String!
+      voteId: String!
+      voteType: String!
+      answers: String!
+      createdAt: String
+    ): Feedback
   }
 `;
 
@@ -127,18 +136,27 @@ const resolvers = {
       _: any,
       {
         widgetId,
-        values
+        voteId,
+        voteType,
+        answers,
+        createdAt
       }: {
         widgetId: string;
-        values: any;
+        voteId: string;
+        voteType: string;
+        answers: any;
+        createdAt: string;
       }
     ) => {
       const { Attributes } = await updateItem({
         TableName: process.env.FEEDBACKS_TABLE!,
-        Key: { widgetId },
-        UpdateExpression: 'SET values = :values',
+        Key: { widgetId, voteId },
+        UpdateExpression:
+          'SET voteType = :voteType, answers = :answers, createdAt = :createdAt',
         ExpressionAttributeValues: {
-          ':values': values
+          ':voteType': voteType,
+          ':answers': answers,
+          ':createdAt': createdAt
         },
         ReturnValues: 'ALL_NEW'
       });

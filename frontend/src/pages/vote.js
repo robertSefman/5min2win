@@ -63,18 +63,16 @@ const VotePage = ({ pageContext }) => {
   const apolloClient = useApolloClient()
   const { userId, widgetId, voteType, followupQuestions, name } = pageContext
   const [showThankYou, setShowThankYou] = useState(false)
-  const [voteId, setVoteId] = useState()
+  const [voteId, setVoteId] = useState(uuidv4())
+  const [createdAt, setcreatedAt] = useState(new Date())
 
   useEffect(() => {
-    ;(async function() {
-      const result = await saveVote({
-        userId,
-        widgetId,
-        voteType,
-        apolloClient,
-      })
-      setVoteId(result.data.widgetVote.voteId)
-    })()
+    saveVote({
+      widgetId,
+      voteId,
+      voteType,
+      apolloClient,
+    })
   }, [])
 
   async function onSubmit(answers) {
@@ -88,6 +86,7 @@ const VotePage = ({ pageContext }) => {
         widgetId,
         voteId,
         voteType,
+        createdAt,
         answers: JSON.stringify(answers),
       },
     })

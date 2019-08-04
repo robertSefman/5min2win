@@ -17,9 +17,21 @@ export const SAVE_WIDGET_QUERY = gql`
 `
 
 export const SAVE_WIDGET_FEEDBACK_QUERY = gql`
-  mutation saveFeedback($widgetId: String!, $values: String!) {
-    saveFeedback(widgetId: $widgetId, values: $values) {
-      values
+  mutation saveFeedback(
+    $widgetId: String!
+    $voteId: String!
+    $voteType: String!
+    $answers: String!
+    $createdAt: String
+  ) {
+    saveFeedback(
+      widgetId: $widgetId
+      voteId: $voteId
+      voteType: $voteType
+      answers: $answers
+      createdAt: $createdAt
+    ) {
+      answers
     }
   }
 `
