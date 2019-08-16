@@ -107,7 +107,9 @@ search:
 
 Sending e-mails
 
-
 AUTH0
 https://swizec.com/blog/gatsby-auth0/swizec/8895
 
+install from git clone (on ramdom_coding):
+
+- yarn install on root, backend and frontend

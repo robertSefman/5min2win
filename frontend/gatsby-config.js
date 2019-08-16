@@ -1,4 +1,5 @@
-const SERVER_URL = ' https://a0veo2tny8.execute-api.us-east-1.amazonaws.com/dev/graphql'
+const SERVER_URL =
+  "https://srcpj0zcd1.execute-api.us-east-1.amazonaws.com/dev/graphql"
 
 module.exports = {
   siteMetadata: {
@@ -14,14 +15,15 @@ module.exports = {
         name: `images`,
         path: `${__dirname}/src/images`,
       },
-    },{
-      resolve: 'gatsby-source-graphql',
+    },
+    {
+      resolve: "gatsby-source-graphql",
       options: {
-        typeName: 'WIDGET',
-        fieldName: 'widgetsapi',
+        typeName: "WIDGET",
+        fieldName: "widgetsapi",
         url: SERVER_URL,
         refetchInterval: 60,
-      }
+      },
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -36,7 +38,6 @@ module.exports = {
         display: `minimal-ui`,
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
-      
     },
     `gatsby-plugin-styled-components`,
     // this (optional) plugin enables Progressive Web App + Offline functionality

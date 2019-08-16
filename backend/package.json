@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/robertSefman/5min2win#readme",
   "dependencies": {
-    "@types/aws-lambda": "^8.10.27",
+    "@types/aws-lambda": "^8.10.31",
     "@types/graphql": "^14.2.2",
     "@types/uuid": "^3.4.4",
     "apollo-server-lambda": "^2.6.4",

@@ -10,17 +10,21 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:GetItem
-        - dynamodb:UpdateItem
-        - dynamodb:PutItem
+        - dynamodb:Query
         - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.WIDGETS_TABLE}'
     - Effect: Allow
       Action:
-        - dynamodb:GetItem
-        - dynamodb:UpdateItem
-        - dynamodb:PutItem
+        - dynamodb:Query
         - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.FEEDBACKS_TABLE}'
 
 functions:
@@ -42,11 +46,15 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
           - AttributeName: widgetId
             AttributeType: S
         KeySchema:
-          - AttributeName: widgetId
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: widgetId
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
