@@ -6,6 +6,17 @@ Building system to win in your life...
 
 Give me some time
 
+## fresh install from git:
+
+- /random-coding:
+- git clone https://github.com/robertSefman/5min2win.git
+- cd 5min2win
+- yarn install
+- cd fromtend
+- yarn install
+- cd ../backend
+- yarn install
+
 ## Tech:
 
 - install Gatsby
