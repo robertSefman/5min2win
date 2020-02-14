@@ -37,7 +37,7 @@
     "styled-system": "^5.0.16",
     "styled-tools": "^1.7.1",
     "uuid": "^3.3.2",
-    "yarn": "^1.16.0"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "prettier": "^1.17.1",
