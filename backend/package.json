@@ -21,7 +21,7 @@
     "@types/aws-lambda": "^8.10.31",
     "@types/graphql": "^14.2.2",
     "@types/uuid": "^3.4.4",
-    "apollo-server-lambda": "^2.6.4",
+    "apollo-server-lambda": "^2.14.2",
     "aws-sdk": "^2.481.0",
     "graphql": "^14.3.1",
     "isomorphic-fetch": "^2.2.1",
